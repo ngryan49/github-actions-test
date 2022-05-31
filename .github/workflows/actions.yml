@@ -1,14 +1,33 @@
 name: Actions Workflow
 
-on: 
+on:
   push:
-  pull_request:
-    types: [closed, assigned, opened, reopened]
+    branches:
+      - master
+      # Cheat Sheet (https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#filter-pattern-cheat-sheet)
+      - 'feature/*' # matches feature/featA, feature/featB
+      - 'feature/**' #matches feature/feat/a
+      - '!feature/featC' # ignore this branch
+    tags:
+      - v1.*
+    paths:
+      - '**.js'
+      - '!filename.js'
+  # repository_dispatch: 
+  #   types: [build]
+  # schedule:
+  #   - cron: "0/5 * * * *" # trigger scheudle every 5 minutes
+  #   - cron: "0/6 * * * *" # trigger schedule every 6 minutes
+  # push:
+  # pull_request:
+  #   types: [closed, assigned, opened, reopened]
 
 jobs:
   run-github-actions:
     runs-on: ubuntu-latest
     steps:
+      - name: payload
+        run: echo ${{ github.event.client_payload.env }}
       - name: List Files
         run: |
           pwd
